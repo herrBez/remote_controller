@@ -25,21 +25,16 @@ func sayHello(w http.ResponseWriter, r *http.Request) {
   w.Write([]byte(message))
 }
 
-// Backend function that increases the volume of the computer of the specified
-// percent value. 65535 is the maximal value.
-func _increase(percent int) {
-  delta := 65535*percent/100
-  parameter := fmt.Sprintf("%d", delta)
-  cmd := exec.Command("cmd", "/C", "nircmd.exe", "changesysvolume", parameter)
-  working_directory, err := os.Getwd()
-  cmd.Dir = working_directory
 
-  // https://stackoverflow.com/questions/18159704/how-to-debug-exit-status-1-error-when-running-exec-command-in-golang
+// Simple wrapper that execute a command and prints the output result in the
+// command line
+// https://stackoverflow.com/questions/18159704/how-to-debug-exit-status-1-error-when-running-exec-command-in-golang
+func executeCommand(cmd *exec.Cmd) { 
   var out bytes.Buffer
   var stderr bytes.Buffer
   cmd.Stdout = &out
   cmd.Stderr = &stderr
-  err = cmd.Run()
+  err := cmd.Run()
   if err != nil {
     fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
     return
@@ -47,24 +42,53 @@ func _increase(percent int) {
   fmt.Println("Result: " + out.String())   
 }
 
+// Backend function that increases the volume of the computer of the specified
+// percent value. 65535 is the maximal value.
+func _increase(percent int) {
+  delta := 65535*percent/100
+  parameter := fmt.Sprintf("%d", delta)
+  cmd := exec.Command("cmd", "/C", "nircmd.exe", "changesysvolume", parameter)
+  working_directory, _ := os.Getwd()
+  cmd.Dir = working_directory
+  executeCommand(cmd) 
+}
+
 func increase (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Increase Volume")
-  _increase(5)
+  go _increase(2)
   sayHello(w, r)
 }
 
 func decrease (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Decrease Volume")
-  _increase(-5)
+  go _increase(-2)
   sayHello(w, r)
 }
 
+func graceful_shutdown(w http.ResponseWriter, r *http.Request, shutdown_channel chan bool) {
+  fmt.Println("Going to shutdown the server gracefully")
+  shutdown_channel <- true
+}
+
 func main() {
+  // Channel used to shutdown gracefully the server
+  shutdown_channel := make(chan bool)
+
+  server := &http.Server{Addr: ":8080"}
   http.HandleFunc("/", sayHello)
   http.HandleFunc("/increase", increase)
   http.HandleFunc("/decrease", decrease)
+  http.HandleFunc("/shutdown", func(w http.ResponseWriter, r *http.Request) { 
+    graceful_shutdown(w, r, shutdown_channel)
+  })
+  
 
-  if err := http.ListenAndServe(":8080", nil); err != nil {
-    panic(err)
-  }
+  go func() {
+    if err := server.ListenAndServe(); err != nil {
+      panic(err)
+    }
+  }()
+  
+  <- shutdown_channel
+  server.Close()
 }
