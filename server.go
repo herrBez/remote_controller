@@ -53,6 +53,13 @@ func _increase(percent int) {
   executeCommand(cmd) 
 }
 
+// Function that mute and unmute the volume of the computer
+func _mute() {
+  parameter := fmt.Sprintf("%d", 2)
+  cmd := exec.Command("cmd", "/C", "nircmd.exe", "mutesysvolume", parameter)
+  executeCommand(cmd)
+}
+
 func increase (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Increase Volume")
   go _increase(2)
@@ -62,6 +69,12 @@ func increase (w http.ResponseWriter, r *http.Request) {
 func decrease (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Decrease Volume")
   go _increase(-2)
+  sayHello(w, r)
+}
+
+func mute (w http.ResponseWriter, r *http.Request) {
+  fmt.Println("Mute/Unmute Volume")
+  go _mute()
   sayHello(w, r)
 }
 
@@ -78,11 +91,11 @@ func main() {
   http.HandleFunc("/", sayHello)
   http.HandleFunc("/increase", increase)
   http.HandleFunc("/decrease", decrease)
+  http.HandleFunc("/mute", mute)
   http.HandleFunc("/shutdown", func(w http.ResponseWriter, r *http.Request) { 
     graceful_shutdown(w, r, shutdown_channel)
   })
   
-
   go func() {
     if err := server.ListenAndServe(); err != nil {
       panic(err)
