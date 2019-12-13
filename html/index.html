@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <!-- Reference: https://www.w3schools.com/w3css/w3css_mobile.asp -->
-<html>
+<script>
+function sendKeyBoard(key) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "send", true);
+    xhttp.setRequestHeader("Content-Type", "text/html; charset=utf-8")
+    xhttp.send(key);
+  }
+</script>
 <title>Remote Controller</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
@@ -29,8 +36,27 @@
     </div>
 </div>
 
-<div class="w3-container">
-    <h3>Remote controller</h3>
+<div class="w3-cell-row">
+    <div class="w3-cell">
+        <a href="/mute">MUTE/UNMUTE</a>
+    </div>
+    <div class="w3-cell w3-container">
+        <h3>MUTE/UNMUTE</h3>
+    </div>
 </div>
+
+<div class="w3-cell-row">
+    <div class="w3-cell">
+        <a href="/pause">PAUSE/UNPAUSE</a>
+    </div>
+    <div class="w3-cell w3-container">
+        <h3>PAUSE/UNPAUSE</h3>
+    </div>
+</div>
+
+
+<button onclick="sendKeyBoard('s')">Skip</button>
+<button onclick="sendKeyBoard('m')">Mute</button>
+
 </body>
 </html>
