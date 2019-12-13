@@ -60,6 +60,13 @@ func _mute() {
   executeCommand(cmd)
 }
 
+// Send a space to the system https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes?redirectedfrom=MSDN
+func _pause() {
+  parameter := fmt.Sprintf("0x20")
+  cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkey", parameter, "press")
+  executeCommand(cmd)
+}
+
 func increase (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Increase Volume")
   go _increase(2)
@@ -78,6 +85,12 @@ func mute (w http.ResponseWriter, r *http.Request) {
   sayHello(w, r)
 }
 
+func pause (w http.ResponseWriter, r *http.Request) {
+  fmt.Println("Mute/Unmute Volume")
+  go _pause()
+  sayHello(w, r)
+}
+
 func graceful_shutdown(w http.ResponseWriter, r *http.Request, shutdown_channel chan bool) {
   fmt.Println("Going to shutdown the server gracefully")
   shutdown_channel <- true
@@ -92,6 +105,7 @@ func main() {
   http.HandleFunc("/increase", increase)
   http.HandleFunc("/decrease", decrease)
   http.HandleFunc("/mute", mute)
+  http.HandleFunc("/pause", pause)
   http.HandleFunc("/shutdown", func(w http.ResponseWriter, r *http.Request) { 
     graceful_shutdown(w, r, shutdown_channel)
   })
