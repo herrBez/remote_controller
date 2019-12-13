@@ -67,6 +67,11 @@ func _pause() {
   executeCommand(cmd)
 }
 
+func _send(key string) {
+  cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkey", key, "press")
+  executeCommand(cmd)
+}
+
 func increase (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Increase Volume")
   go _increase(2)
@@ -96,6 +101,16 @@ func graceful_shutdown(w http.ResponseWriter, r *http.Request, shutdown_channel 
   shutdown_channel <- true
 }
 
+func send (w http.ResponseWriter, r *http.Request) {
+  body, err := ioutil.ReadAll(r.Body)
+  fmt.Println(string(body))
+  if err != nil {
+    http.Error(w, "can't read body", http.StatusBadRequest)
+    return
+  }
+  _send(string(body))
+}
+
 func main() {
   // Channel used to shutdown gracefully the server
   shutdown_channel := make(chan bool)
@@ -106,6 +121,7 @@ func main() {
   http.HandleFunc("/decrease", decrease)
   http.HandleFunc("/mute", mute)
   http.HandleFunc("/pause", pause)
+  http.HandleFunc("/send", send)
   http.HandleFunc("/shutdown", func(w http.ResponseWriter, r *http.Request) { 
     graceful_shutdown(w, r, shutdown_channel)
   })
