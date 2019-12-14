@@ -4,6 +4,10 @@ Remote controller is a light remote controller for your laptop. It allows
 you to increase the volume of your laptop and to pause a video from your
 smart phone.
 
+## Original use case
+
+As a lazy netflix watcher I want to be able to skip an intro, increase or decrease the volume, while lying down on my bed.
+
 ## Getting Started
 
 Make sure that your laptop and your smart-phone are in the same
@@ -35,6 +39,9 @@ On your smartphone (:iphone:):
 
 ## How does it work
 
+The web server responds to the different endpoints by calling
+a command in the shell of your laptop. In Windows systems this
+utility is [nircmd](https://www.nirsoft.net/utils/index.html). Thus, in windows system it is a wrapper for nircmd.
 
 ## License
 
