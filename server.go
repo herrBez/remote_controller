@@ -72,6 +72,13 @@ func _send(key string) {
   executeCommand(cmd)
 }
 
+func _switch_app() {
+  cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkeypress", "alt+tab")
+  executeCommand(cmd)
+}
+
+
+
 func increase (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Increase Volume")
   go _increase(2)
@@ -96,6 +103,12 @@ func pause (w http.ResponseWriter, r *http.Request) {
   sayHello(w, r)
 }
 
+func switch_app(w http.ResponseWriter, r *http.Request) {
+  fmt.Println("Switch App")
+  go _switch_app()
+  sayHello(w, r)
+}
+
 func graceful_shutdown(w http.ResponseWriter, r *http.Request, shutdown_channel chan bool) {
   fmt.Println("Going to shutdown the server gracefully")
   shutdown_channel <- true
@@ -108,7 +121,7 @@ func send (w http.ResponseWriter, r *http.Request) {
     http.Error(w, "can't read body", http.StatusBadRequest)
     return
   }
-  _send(string(body))
+  go _send(string(body))
 }
 
 func main() {
@@ -116,12 +129,14 @@ func main() {
   shutdown_channel := make(chan bool)
 
   server := &http.Server{Addr: ":8080"}
+  defer server.Close()
   http.HandleFunc("/", sayHello)
   http.HandleFunc("/increase", increase)
   http.HandleFunc("/decrease", decrease)
   http.HandleFunc("/mute", mute)
   http.HandleFunc("/pause", pause)
   http.HandleFunc("/send", send)
+  http.HandleFunc("/switch", switch_app)
   http.HandleFunc("/shutdown", func(w http.ResponseWriter, r *http.Request) { 
     graceful_shutdown(w, r, shutdown_channel)
   })
@@ -132,6 +147,6 @@ func main() {
     }
   }()
   
+  // Waiting for a message in the shutdown channel
   <- shutdown_channel
-  server.Close()
 }
