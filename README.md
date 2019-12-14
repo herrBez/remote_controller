@@ -41,7 +41,13 @@ On your smartphone (:iphone:):
 
 The web server responds to the different endpoints by calling
 a command in the shell of your laptop. In Windows systems this
-utility is [nircmd](https://www.nirsoft.net/utils/index.html). Thus, in windows system it is a wrapper for nircmd.
+utility is [nircmd](https://www.nirsoft.net/utils/index.html).
+Thus, in windows system it is a wrapper for nircmd.
+
+### References
+
+- [Netflix shortcut reference](https://help.netflix.com/en/node/24855)
+- [Nircmd short reference](https://www.nirsoft.net/utils/nircmd.html)
 
 ## License
 
