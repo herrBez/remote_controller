@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Reference: https://www.w3schools.com/w3css/w3css_mobile.asp -->
 <script>
 function sendKeyBoard(key) {
     var xhttp = new XMLHttpRequest();
@@ -7,56 +6,36 @@ function sendKeyBoard(key) {
     xhttp.setRequestHeader("Content-Type", "text/html; charset=utf-8")
     xhttp.send(key);
   }
+function sendGetRequestToEndpoint(endpoint) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", endpoint, true);
+    xhttp.send();
+}
 </script>
 <title>Remote Controller</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
 <body>
 
-<div class="w3-container w3-card">
-  <h1>Remote Controller</h1>
-  <p>Increase and decrease the volume of your computer</p>
-</div>
+<h1>Remote Controller</h1>
 
-<div class="w3-cell-row">
-    <div class="w3-cell">
-        <a href="/increase"><img src="html/img/increase.jpg" alt="VOLUME UP"></a>
-    </div>
-    <div class="w3-cell w3-container">
-        <h3>Increase the volume</h3>
-    </div>
-</div>
+Click the buttons on the page to make actions on your laptop
 
-<div class="w3-cell-row">
-    <div class="w3-cell">
-        <a href="/decrease"><img src="./img/decrease.jpg" alt="VOLUME DOWN"></a>
-    </div>
-    <div class="w3-cell w3-container">
-        <h3>Decrease the volume</h3>
-    </div>
-</div>
+<h2>Generic Section</h2>
 
-<div class="w3-cell-row">
-    <div class="w3-cell">
-        <a href="/mute">MUTE/UNMUTE</a>
-    </div>
-    <div class="w3-cell w3-container">
-        <h3>MUTE/UNMUTE</h3>
-    </div>
-</div>
+<button onclick="sendGetRequestToEndpoint('increase')">VOLUME UP</button>
+<button onclick="sendGetRequestToEndpoint('decrease')">VOLUME DOWN</button>
+<button onclick="sendGetRequestToEndpoint('mute')">VOLUME DOWN</button>
+<button onclick="sendGetRequestToEndpoint('pause')">VOLUME DOWN</button>
+<button onclick="sendGetRequestToEndpoint('switch')">SWITCH APP</button>
 
-<div class="w3-cell-row">
-    <div class="w3-cell">
-        <a href="/pause">PAUSE/UNPAUSE</a>
-    </div>
-    <div class="w3-cell w3-container">
-        <h3>PAUSE/UNPAUSE</h3>
-    </div>
-</div>
-
+<h2>Netflix specific-commands</h2>
+Generic shortcuts for Netflix <br>
 
 <button onclick="sendKeyBoard('s')">Skip</button>
 <button onclick="sendKeyBoard('m')">Mute</button>
+
+<h2>Danger Zone</h2>
+<button onclick="sendGetRequestToEndpoint('shutdown')">Shutdown</button>
 
 </body>
 </html>
