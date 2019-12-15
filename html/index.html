@@ -5,7 +5,7 @@ function sendKeyBoard(key) {
     xhttp.open("POST", "send", true);
     xhttp.setRequestHeader("Content-Type", "text/html; charset=utf-8")
     xhttp.send(key);
-  }
+}
 function sendGetRequestToEndpoint(endpoint) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", endpoint, true);
@@ -20,21 +20,29 @@ function sendGetRequestToEndpoint(endpoint) {
 
 Click the buttons on the page to make actions on your laptop
 
-<h2>Generic Section</h2>
+<h2>Generic Section &#x1F4BB; </h2>
 
-<button onclick="sendGetRequestToEndpoint('increase')">VOLUME UP</button>
-<button onclick="sendGetRequestToEndpoint('decrease')">VOLUME DOWN</button>
-<button onclick="sendGetRequestToEndpoint('mute')">VOLUME DOWN</button>
-<button onclick="sendGetRequestToEndpoint('pause')">VOLUME DOWN</button>
-<button onclick="sendGetRequestToEndpoint('switch')">SWITCH APP</button>
+These buttons affects the settings of your laptop <br>
+
+<button onclick="sendGetRequestToEndpoint('increase')">VOLUME UP &#x1F50A;</button>
+<button onclick="sendGetRequestToEndpoint('decrease')">VOLUME DOWN &#x1F509; </button>
+<button onclick="sendGetRequestToEndpoint('mute')">MUTE/UNMUTE &#x1F507; </button>
+<button onclick="sendGetRequestToEndpoint('pause')">PAUSE/UNPAUSE &#x25B6;</button>
+<button onclick="sendGetRequestToEndpoint('switch')">SWITCH APP &#x1F500; </button>
 
 <h2>Netflix specific-commands</h2>
-Generic shortcuts for Netflix <br>
 
-<button onclick="sendKeyBoard('s')">Skip</button>
-<button onclick="sendKeyBoard('m')">Mute</button>
+These buttons are specific for Netflix <br>
 
-<h2>Danger Zone</h2>
+<button onclick="sendKeyBoard('s')">SKIP &#x1F998; </button>
+<button onclick="sendKeyBoard('m')">MUTE &#x1F507; </button>
+<button onclick="sendKeyBoard('f')">FULL SCREEN &#x1F4FA;</button>
+<button onclick="sendGetRequestToEndpoint('pause')">PAUSE/UNPAUSE &#x25B6; </button>
+<button onclick="sendKeyBoard('0x25')">REWIND &#x23EA; </button>
+<button onclick="sendKeyBoard('0x27')">FAST FORWARD &#x23E9;</button>
+
+<h2>Danger Zone &#x26A0;</h2>
+
 <button onclick="sendGetRequestToEndpoint('shutdown')">Shutdown</button>
 
 </body>
