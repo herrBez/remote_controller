@@ -11,9 +11,7 @@ import (
   "net/http"
   "fmt"
   "io/ioutil"
-  "os/exec"
-  "os"
-  "bytes"
+  "github.com/herrBez/remote_controller/platform_specific"
 )
 
 // Code for the welcome page, simply load the static web page
@@ -25,93 +23,29 @@ func sayHello(w http.ResponseWriter, r *http.Request) {
   w.Write([]byte(message))
 }
 
-
-// Simple wrapper that execute a command and prints the output result in the
-// command line
-// https://stackoverflow.com/questions/18159704/how-to-debug-exit-status-1-error-when-running-exec-command-in-golang
-func executeCommand(cmd *exec.Cmd) { 
-  var out bytes.Buffer
-  var stderr bytes.Buffer
-  cmd.Stdout = &out
-  cmd.Stderr = &stderr
-  err := cmd.Run()
-  if err != nil {
-    fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-    return
-  }
-  fmt.Println("Result: " + out.String())   
-}
-
-// Backend function that increases the volume of the computer of the specified
-// percent value. 65535 is the maximal value.
-func _increase(percent int) {
-  delta := 65535*percent/100
-  parameter := fmt.Sprintf("%d", delta)
-  cmd := exec.Command("cmd", "/C", "nircmd.exe", "changesysvolume", parameter)
-  working_directory, _ := os.Getwd()
-  cmd.Dir = working_directory
-  executeCommand(cmd) 
-}
-
-// Function that mute and unmute the volume of the computer
-func _mute() {
-  parameter := fmt.Sprintf("%d", 2)
-  cmd := exec.Command("cmd", "/C", "nircmd.exe", "mutesysvolume", parameter)
-  executeCommand(cmd)
-}
-
-// Send a space to the system https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes?redirectedfrom=MSDN
-func _pause() {
-  parameter := fmt.Sprintf("0x20")
-  cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkey", parameter, "press")
-  executeCommand(cmd)
-}
-
-func _send(key string) {
-  cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkey", key, "press")
-  executeCommand(cmd)
-}
-
-func _switch_app() {
-  cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkeypress", "alt+tab")
-  executeCommand(cmd)
-}
-
-
-
 func increase (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Increase Volume")
-  go _increase(2)
-  sayHello(w, r)
+  go platform_specific.IncreaseVolume(2)
 }
 
 func decrease (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Decrease Volume")
-  go _increase(-2)
-  sayHello(w, r)
+  go platform_specific.IncreaseVolume(-2)
 }
 
 func mute (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Mute/Unmute Volume")
-  go _mute()
-  sayHello(w, r)
+  go platform_specific.MuteVolume()
 }
 
 func pause (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Mute/Unmute Volume")
-  go _pause()
-  sayHello(w, r)
+  go platform_specific.Pause()
 }
 
 func switch_app(w http.ResponseWriter, r *http.Request) {
   fmt.Println("Switch App")
-  go _switch_app()
-  sayHello(w, r)
-}
-
-func graceful_shutdown(w http.ResponseWriter, r *http.Request, shutdown_channel chan bool) {
-  fmt.Println("Going to shutdown the server gracefully")
-  shutdown_channel <- true
+  go platform_specific.SwitchApp()
 }
 
 func send (w http.ResponseWriter, r *http.Request) {
@@ -121,7 +55,12 @@ func send (w http.ResponseWriter, r *http.Request) {
     http.Error(w, "can't read body", http.StatusBadRequest)
     return
   }
-  go _send(string(body))
+  go platform_specific.SendKeyBoardInput(string(body))
+}
+
+func graceful_shutdown(w http.ResponseWriter, r *http.Request, shutdown_channel chan bool) {
+  fmt.Println("Going to shutdown the server gracefully")
+  shutdown_channel <- true
 }
 
 func main() {
