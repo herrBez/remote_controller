@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <script>
-function sendKeyBoard(key) {
+
+function sendPostRequestToEndpoint(endpoint, body) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "send", true);
+    xhttp.open("POST", endpoint, true);
     xhttp.setRequestHeader("Content-Type", "text/html; charset=utf-8")
-    xhttp.send(key);
+    xhttp.send(body);
 }
 function sendGetRequestToEndpoint(endpoint) {
     var xhttp = new XMLHttpRequest();
@@ -24,22 +25,28 @@ Click the buttons on the page to make actions on your laptop
 
 These buttons affects the settings of your laptop <br>
 
-<button onclick="sendGetRequestToEndpoint('increase')">VOLUME UP &#x1F50A;</button>
-<button onclick="sendGetRequestToEndpoint('decrease')">VOLUME DOWN &#x1F509; </button>
-<button onclick="sendGetRequestToEndpoint('mute')">MUTE/UNMUTE &#x1F507; </button>
-<button onclick="sendGetRequestToEndpoint('pause')">PAUSE/UNPAUSE &#x25B6;</button>
-<button onclick="sendGetRequestToEndpoint('switch')">SWITCH APP &#x1F500; </button>
+<!-- Extract the percentage value from the range input and send it to "volume/set" endpoint -->
+<input id="volume_range" type="range" min="1" max="100" value="0"
+onmouseup="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value)"
+ontouchend="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value)">
+
+<button onclick="sendGetRequestToEndpoint('volume/increase')">VOLUME UP &#x1F50A;</button>
+<button onclick="sendGetRequestToEndpoint('volume/decrease')">VOLUME DOWN &#x1F509; </button>
+<button onclick="sendGetRequestToEndpoint('volume/mute')">MUTE/UNMUTE &#x1F507; </button>
+<button onclick="sendPostRequestToEndpoint('send', '0x20')">PAUSE/UNPAUSE &#x25B6; </button>
+<button onclick="sendGetRequestToEndpoint('/sys/switch')">SWITCH APP &#x1F500; </button>
+<button onclick="sendGetRequestToEndpoint('/mouse/move_cursor')">MOVE CURSOR &#x1F5B0;</button>
 
 <h2>Netflix specific-commands</h2>
 
 These buttons are specific for Netflix <br>
 
-<button onclick="sendKeyBoard('s')">SKIP &#x1F998; </button>
-<button onclick="sendKeyBoard('m')">MUTE &#x1F507; </button>
-<button onclick="sendKeyBoard('f')">FULL SCREEN &#x1F4FA;</button>
-<button onclick="sendGetRequestToEndpoint('pause')">PAUSE/UNPAUSE &#x25B6; </button>
-<button onclick="sendKeyBoard('0x25')">REWIND &#x23EA; </button>
-<button onclick="sendKeyBoard('0x27')">FAST FORWARD &#x23E9;</button>
+<button onclick="sendPostRequestToEndpoint('send', 's')">SKIP &#x1F998; </button>
+<button onclick="sendPostRequestToEndpoint('send', 'm')">MUTE &#x1F507; </button>
+<button onclick="sendPostRequestToEndpoint('send', 'f')">FULL SCREEN &#x1F4FA;</button>
+<button onclick="sendPostRequestToEndpoint('send', '0x20')">PAUSE/UNPAUSE &#x25B6; </button>
+<button onclick="sendPostRequestToEndpoint('send', '0x25')">REWIND &#x23EA; </button>
+<button onclick="sendPostRequestToEndpoint('send', '0x27')">FAST FORWARD &#x23E9;</button>
 
 <h2>Danger Zone &#x26A0;</h2>
 

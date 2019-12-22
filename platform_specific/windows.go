@@ -4,7 +4,6 @@ package platform_specific
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"github.com/herrBez/remote_controller/core"
 )
@@ -15,8 +14,14 @@ func IncreaseVolume(percent int) {
 	delta := 65535*percent/100
 	parameter := fmt.Sprintf("%d", delta)
 	cmd := exec.Command("cmd", "/C", "nircmd.exe", "changesysvolume", parameter)
-	working_directory, _ := os.Getwd()
-	cmd.Dir = working_directory
+	core.ExecuteCommand(cmd)
+}
+
+func SetAbsoluteVolume(percent int) {
+	fmt.Println("Set absolute volume")
+	delta := 65535*percent/100
+	parameter := fmt.Sprintf("%d", delta)
+	cmd := exec.Command("cmd", "/C", "nircmd.exe", "setsysvolume", parameter)
 	core.ExecuteCommand(cmd)
 }
 
@@ -27,8 +32,7 @@ func MuteVolume() {
 }
 
 func Pause() {
-	parameter := fmt.Sprintf("0x20")
-	cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkey", parameter, "press")
+	cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkey", "0x20", "press")
 	core.ExecuteCommand(cmd)
 }
 
@@ -40,4 +44,12 @@ func SendKeyBoardInput(key string) {
 func SwitchApp() {
 	cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkeypress", "alt+tab")
 	core.ExecuteCommand(cmd)
+}
+
+// Move the cursor into another position and back to original position
+func MoveCursor() {
+	cmd1 := exec.Command("cmd", "/C", "nircmd.exe", "movecursor", "10", "10")
+	cmd2 := exec.Command("cmd", "/C", "nircmd.exe", "movecursor", "-10", "-10")
+	core.ExecuteCommand(cmd1)
+	core.ExecuteCommand(cmd2)
 }

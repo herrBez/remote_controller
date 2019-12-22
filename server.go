@@ -11,6 +11,7 @@ import (
   "net/http"
   "fmt"
   "io/ioutil"
+  "strconv"
   "github.com/herrBez/remote_controller/platform_specific"
 )
 
@@ -39,7 +40,7 @@ func mute (w http.ResponseWriter, r *http.Request) {
 }
 
 func pause (w http.ResponseWriter, r *http.Request) {
-  fmt.Println("Mute/Unmute Volume")
+  fmt.Println("Pause")
   go platform_specific.Pause()
 }
 
@@ -48,14 +49,38 @@ func switch_app(w http.ResponseWriter, r *http.Request) {
   go platform_specific.SwitchApp()
 }
 
-func send (w http.ResponseWriter, r *http.Request) {
+func move_cursor(w http.ResponseWriter, r *http.Request) {
+  fmt.Println("Move cursor")
+  go platform_specific.MoveCursor()
+}
+
+
+func extractBody(r *http.Request) (string, error) {
   body, err := ioutil.ReadAll(r.Body)
   fmt.Println(string(body))
+  return string(body), err
+}
+
+func set_absolute_volume(w http.ResponseWriter, r *http.Request) {
+  body, err := extractBody(r)
   if err != nil {
     http.Error(w, "can't read body", http.StatusBadRequest)
     return
   }
-  go platform_specific.SendKeyBoardInput(string(body))
+  int_body, err := strconv.Atoi(body)
+  if err != nil {
+    http.Error(w, "cannot parse int in body", http.StatusBadRequest)
+    return
+  }
+  go platform_specific.SetAbsoluteVolume(int_body)
+}
+func send (w http.ResponseWriter, r *http.Request) {
+  body, err := extractBody(r)
+  if err != nil {
+    http.Error(w, "can't read body", http.StatusBadRequest)
+    return
+  }
+  go platform_specific.SendKeyBoardInput(body)
 }
 
 func graceful_shutdown(w http.ResponseWriter, r *http.Request, shutdown_channel chan bool) {
@@ -70,12 +95,14 @@ func main() {
   server := &http.Server{Addr: ":8080"}
   defer server.Close()
   http.HandleFunc("/", sayHello)
-  http.HandleFunc("/increase", increase)
-  http.HandleFunc("/decrease", decrease)
-  http.HandleFunc("/mute", mute)
+  http.HandleFunc("/volume/increase", increase)
+  http.HandleFunc("/volume/decrease", decrease)
+  http.HandleFunc("/volume/set", set_absolute_volume)
+  http.HandleFunc("/volume/mute", mute)
   http.HandleFunc("/pause", pause)
   http.HandleFunc("/send", send)
-  http.HandleFunc("/switch", switch_app)
+  http.HandleFunc("/sys/switch", switch_app)
+  http.HandleFunc("/mouse/move_cursor", move_cursor)
   http.HandleFunc("/shutdown", func(w http.ResponseWriter, r *http.Request) { 
     graceful_shutdown(w, r, shutdown_channel)
   })
