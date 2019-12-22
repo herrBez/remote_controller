@@ -12,23 +12,32 @@ function sendGetRequestToEndpoint(endpoint) {
     xhttp.open("GET", endpoint, true);
     xhttp.send();
 }
+function init() {
+    document.getElementById('foo').innerText=document.getElementById('volume_range').value
+}
 </script>
-<title>Remote Controller</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<body>
+
+<body onload=init()>
 
 <h1>Remote Controller</h1>
 
+<p>
 Click the buttons on the page to make actions on your laptop
+<br>
+</p>
 
 <h2>Generic Section &#x1F4BB; </h2>
 
 These buttons affects the settings of your laptop <br>
 
+<p id="volume_range_display"></p>
 <!-- Extract the percentage value from the range input and send it to "volume/set" endpoint -->
-<input id="volume_range" type="range" min="1" max="100" value="0"
+<input style='width:100%;' id="volume_range" type="range" min="1" max="100" value="0"
 onmouseup="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value)"
-ontouchend="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value)">
+ontouchend="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value)"
+ontouchmove="document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value"
+onmousemove="document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value">
+<br>
 
 <button onclick="sendGetRequestToEndpoint('volume/increase')">VOLUME UP &#x1F50A;</button>
 <button onclick="sendGetRequestToEndpoint('volume/decrease')">VOLUME DOWN &#x1F509; </button>

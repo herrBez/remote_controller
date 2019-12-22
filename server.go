@@ -8,6 +8,7 @@
 package main
 
 import (
+  "os"
   "net/http"
   "fmt"
   "io/ioutil"
@@ -42,6 +43,7 @@ func mute (w http.ResponseWriter, r *http.Request) {
 func pause (w http.ResponseWriter, r *http.Request) {
   fmt.Println("Pause")
   go platform_specific.Pause()
+  //http.Error(w, "cannot parse int in body", http.StatusBadRequest)
 }
 
 func switch_app(w http.ResponseWriter, r *http.Request) {
@@ -106,6 +108,11 @@ func main() {
   http.HandleFunc("/shutdown", func(w http.ResponseWriter, r *http.Request) { 
     graceful_shutdown(w, r, shutdown_channel)
   })
+  dir, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+  }
+  http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir(dir + "/html"))))
   
   go func() {
     if err := server.ListenAndServe(); err != nil {
