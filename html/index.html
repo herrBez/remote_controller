@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<head>
 <script>
 
 function sendPostRequestToEndpoint(endpoint, body) {
@@ -15,15 +16,35 @@ function sendGetRequestToEndpoint(endpoint) {
 function init() {
     document.getElementById('foo').innerText=document.getElementById('volume_range').value
 }
-</script>
+function toggleDarkMode() {
+    var matches = document.getElementsByClassName('normal');
+    var classToRemove = "normal"
+    var classToAdd = "darkmode"
+    if (matches.length == 0) {
+        matches = document.getElementsByClassName('darkmode');
+        classToRemove = "darkmode"
+        classToAdd = "normal"
+    }
+    while (matches.length > 0) {
+        matches[0].classList.add(classToAdd);
+        matches.item(0).classList.remove(classToRemove);
 
-<body onload=init()>
+    }
+}
+</script>
+    <title>Remote Controller</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="html/style.css">
+</head>
+<body class="normal" onload=init()>
 
 <h1>Remote Controller</h1>
 
 <p>
 Click the buttons on the page to make actions on your laptop
 <br>
+<button onclick="toggleDarkMode()">Dark Mode</button>
+</p>
 </p>
 
 <h2>Generic Section &#x1F4BB; </h2>

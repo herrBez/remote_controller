@@ -1,0 +1,36 @@
+button {
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+body.normal {
+    background-color: white;
+    color: #272727;
+}
+
+
+body.normal button {
+    background-color: #4f98ca;
+    color: #effffb;
+}
+
+
+body.darkmode {
+    background-color: #222831;
+    color: #eeeeee;
+}
+
+body.darkmode button {
+    background-color: teal;
+    color: #eeeeee;
+}
+body.darkmode h1 {
+    color: teal;
+}
+
