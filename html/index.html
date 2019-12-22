@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<head>
 <script>
 
 function sendPostRequestToEndpoint(endpoint, body) {
@@ -31,7 +30,15 @@ function toggleDarkMode() {
 
     }
 }
+function processKeyBoard() {
+    content = document.getElementById('prova').value
+    console.log(content)
+    sendPostRequestToEndpoint('send', content)
+}
+
+
 </script>
+<head>
     <title>Remote Controller</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="html/style.css">
@@ -44,7 +51,6 @@ function toggleDarkMode() {
 Click the buttons on the page to make actions on your laptop
 <br>
 <button onclick="toggleDarkMode()">Dark Mode</button>
-</p>
 </p>
 
 <h2>Generic Section &#x1F4BB; </h2>
@@ -77,6 +83,10 @@ These buttons are specific for Netflix <br>
 <button onclick="sendPostRequestToEndpoint('send', '0x20')">PAUSE/UNPAUSE &#x25B6; </button>
 <button onclick="sendPostRequestToEndpoint('send', '0x25')">REWIND &#x23EA; </button>
 <button onclick="sendPostRequestToEndpoint('send', '0x27')">FAST FORWARD &#x23E9;</button>
+
+<br>
+<p id="output"></p>
+<input id="prova" onchange="processKeyBoard()" type="text" />
 
 <h2>Danger Zone &#x26A0;</h2>
 

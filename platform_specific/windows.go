@@ -8,6 +8,12 @@ import (
 	"github.com/herrBez/remote_controller/core"
 )
 
+// https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+var vk map[string]string = map[string]string {
+	",": "0xBC",
+	" ": "0x20",
+}
+
 // Backend function that increases the volume of the computer of the specified
 // percent value. 65535 is the maximal value.
 func IncreaseVolume(percent int) {
@@ -36,9 +42,27 @@ func Pause() {
 	core.ExecuteCommand(cmd)
 }
 
-func SendKeyBoardInput(key string) {
+func SendSingleKeyBoardInput(key string) {
+	symbol, ok := vk[key]
+	fmt.Println(string(symbol) + "//" + string(key))
+	if !ok {
+		fmt.Println(key + " not present")
+	} else {
+		fmt.Println(key + " present")
+		key = symbol
+	}
+	fmt.Println(string(symbol) + "==" + string(key))
 	cmd := exec.Command("cmd", "/C", "nircmd.exe", "sendkey", key, "press")
 	core.ExecuteCommand(cmd)
+}
+
+
+func SendKeyBoardInput(key string) {
+	fmt.Println("I am going to print '" + key + "'")
+	var i = 0
+	for i = 0; i < len(key); i++ {
+		SendSingleKeyBoardInput(string(key[i]))
+	}
 }
 
 func SwitchApp() {
