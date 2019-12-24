@@ -9,19 +9,29 @@ import (
 )
 
 
-// Backend function that increases the volume of the computer of the specified
-// percent value. 65535 is the maximal value.
+/// Syntax: amixer set Master <percent>%<+|->
 func IncreaseVolume(percent int) {
 	fmt.Println("Increase Volume")
+	append_symbol := "+"
+	if percent < 0 {
+		append_symbol = "-"
+	}
+	parameter := fmt.Sprintf("%d%s%s", percent, "%", append_symbol)
+	cmd := exec.Command("amixer", "set", "Master", parameter)
+	core.ExecuteCommand(cmd)
 }
 
 func SetAbsoluteVolume(percent int) {
 	fmt.Println("Set absolute volume")
+	parameter := fmt.Sprintf("%d%s", percent,"%")
+	fmt.Println(parameter)
+	cmd := exec.Command("amixer", "set", "Master", parameter)
+	core.ExecuteCommand(cmd)
 }
 
 func MuteVolume() {
 	fmt.Println("Mute volume")
-	cmd := exec.Command("echo", "hello")
+	cmd := exec.Command("amixer", "Master", "toggle")
 	core.ExecuteCommand(cmd)
 }
 
