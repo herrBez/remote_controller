@@ -38,21 +38,39 @@ func MuteVolume() {
 
 func Pause() {
 	fmt.Println("Pause")
+	cmd := exec.Command("xdotool", "key", "space")
+	core.ExecuteCommand(cmd)
 }
 
 func SendSingleKeyBoardInput(key string) {
 	fmt.Println("SendSingleKeyBoardInput")
 }
 
-
+// Usage: xdotool key [A-Z ,;](\s+[A-Z ,;])*
 func SendKeyBoardInput(key string) {
-	fmt.Println("SendSingleKeyBoardInput")
-
+	fmt.Println("SendKeyBoardInput")
+	fmt.Println("I am going to print '" + key + "'")
+	var i = 0
+	n := len(key)
+	parameter := make([]string, n+1)
+	parameter[0] = "key"
+	for i = 0; i < n; i++ {
+		switch key[i] {
+		case 0x20:
+			parameter[i+1] = "space"
+		default:
+			parameter[i+1] = string(key[i])
+		}
+	}
+	fmt.Println(parameter)
+	cmd := exec.Command("xdotool", parameter...)
+	core.ExecuteCommand(cmd)
 }
 
 func SwitchApp() {
 	fmt.Println("SwitchApp")
-
+	cmd := exec.Command("xdotool", "key", "alt+Tab")
+	core.ExecuteCommand(cmd)
 }
 
 // Move the cursor into another position and back to original position
