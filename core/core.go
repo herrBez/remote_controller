@@ -13,6 +13,7 @@ import (
 func ExecuteCommand(cmd *exec.Cmd) { 
 	var out bytes.Buffer
 	var stderr bytes.Buffer
+	fmt.Println(cmd.String())
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err := cmd.Run()
