@@ -76,7 +76,8 @@ func SwitchApp() {
 // Move the cursor into another position and back to original position
 func MoveCursor() {
 	fmt.Println("MoveCursor")
-
+	cmd := exec.Command("xdotool", "mousemove", "10", "10", "mousemove", "restore")
+	core.ExecuteCommand(cmd)
 }
 
 
