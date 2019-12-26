@@ -21,3 +21,6 @@ nircmd-x64/
 # Ignore files that ends with bak
 *.bak
 *~
+
+# Ignore linux's executable
+remote_controller
