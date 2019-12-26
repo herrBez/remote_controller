@@ -13,7 +13,7 @@ function sendGetRequestToEndpoint(endpoint) {
     xhttp.send();
 }
 function init() {
-    document.getElementById('foo').innerText=document.getElementById('volume_range').value
+    document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value
 }
 function toggleDarkMode() {
     var matches = document.getElementsByClassName('normal');
@@ -57,14 +57,14 @@ Click the buttons on the page to make actions on your laptop
 
 These buttons affects the settings of your laptop <br>
 
-<p id="volume_range_display"></p>
+<p id="volume_range_display">Volume</p>
 <!-- Extract the percentage value from the range input and send it to "volume/set" endpoint -->
 <input style='width:100%;' id="volume_range" type="range" min="1" max="100" value="0"
-onmouseup="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value)"
-ontouchend="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value)"
+onmouseup="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value); document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value"
+ontouchend="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value); document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value"
 ontouchmove="document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value"
-onmousemove="document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value">
-<br>
+onmousemove="document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value"
+><br>
 
 <button onclick="sendGetRequestToEndpoint('volume/increase')">VOLUME UP &#x1F50A;</button>
 <button onclick="sendGetRequestToEndpoint('volume/decrease')">VOLUME DOWN &#x1F509; </button>
