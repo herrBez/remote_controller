@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<script>
 
+<script>
 function sendPostRequestToEndpoint(endpoint, body) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", endpoint, true);
@@ -27,15 +27,25 @@ function toggleDarkMode() {
     while (matches.length > 0) {
         matches[0].classList.add(classToAdd);
         matches.item(0).classList.remove(classToRemove);
-
     }
 }
+
+function toggleDescription() {
+    var matches = document.getElementsByName('description');
+    for(k in matches) {
+        if (matches[k].style.display === "none") {
+            matches[k].style.display = "block";
+        } else {
+            matches[k].style.display = "none";
+        }
+    }
+}
+
 function processKeyBoard() {
     content = document.getElementById('prova').value
     console.log(content)
     sendPostRequestToEndpoint('send', content)
 }
-
 
 </script>
 <head>
@@ -45,13 +55,29 @@ function processKeyBoard() {
 </head>
 <body class="normal" onload=init()>
 
-<h1>Remote Controller</h1>
+<h1><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+Remote Controller</h1>
 
 <p>
-Click the buttons on the page to make actions on your laptop
-<br>
-<button onclick="toggleDarkMode()">Dark Mode</button>
-</p>
+
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+</script>
+
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="#" onclick="toggleDarkMode()">Dark Mode</a>
+  <a href="#" onclick="toggleDescription()">Toggle Description</a>
+  <a href="#" onclick="alert('Simple Golang Remote Controller')">About</a>
+</div>
+
+
 
 <h2>Generic Section &#x1F4BB; </h2>
 
@@ -60,29 +86,29 @@ These buttons affects the settings of your laptop <br>
 <p id="volume_range_display"></p>
 <!-- Extract the percentage value from the range input and send it to "volume/set" endpoint -->
 <input style='width:100%;' id="volume_range" type="range" min="1" max="100" value="0"
-onmouseup="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value)"
-ontouchend="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value)"
+onmouseup="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value);  document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value"
+ontouchend="sendPostRequestToEndpoint('volume/set', document.getElementById('volume_range').value); document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value"
 ontouchmove="document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value"
 onmousemove="document.getElementById('volume_range_display').innerText=document.getElementById('volume_range').value">
 <br>
 
-<button onclick="sendGetRequestToEndpoint('volume/increase')">VOLUME UP &#x1F50A;</button>
-<button onclick="sendGetRequestToEndpoint('volume/decrease')">VOLUME DOWN &#x1F509; </button>
-<button onclick="sendGetRequestToEndpoint('volume/mute')">MUTE/UNMUTE &#x1F507; </button>
-<button onclick="sendPostRequestToEndpoint('send', '0x20')">PAUSE/UNPAUSE &#x25B6; </button>
-<button onclick="sendGetRequestToEndpoint('/sys/switch')">SWITCH APP &#x1F500; </button>
-<button onclick="sendGetRequestToEndpoint('/mouse/move_cursor')">MOVE CURSOR &#x1F401;</button>
+<button onclick="sendGetRequestToEndpoint('volume/increase')"><span name="description">VOLUME UP</span> &#x1F50A;</button>
+<button onclick="sendGetRequestToEndpoint('volume/decrease')"><span name="description">VOLUME DOWN</span> &#x1F509; </button>
+<button onclick="sendGetRequestToEndpoint('volume/mute')"><span name="description">MUTE/UNMUTE</span> &#x1F507; </button>
+<button onclick="sendPostRequestToEndpoint('send', '0x20')"><span name="description">PAUSE/UNPAUSE</span> &#x25B6; </button>
+<button onclick="sendGetRequestToEndpoint('/sys/switch')"><span name="description">SWITCH APP</span> &#x1F500; </button>
+<button onclick="sendGetRequestToEndpoint('/mouse/move_cursor')"><span name="description">MOVE CURSOR</span>&#x1F401;</button>
 
 <h2>Netflix specific-commands</h2>
 
 These buttons are specific for Netflix <br>
 
-<button onclick="sendPostRequestToEndpoint('send', 's')">SKIP &#x1F998; </button>
-<button onclick="sendPostRequestToEndpoint('send', 'm')">MUTE &#x1F507; </button>
-<button onclick="sendPostRequestToEndpoint('send', 'f')">FULL SCREEN &#x1F4FA;</button>
-<button onclick="sendPostRequestToEndpoint('send', '0x20')">PAUSE/UNPAUSE &#x25B6; </button>
-<button onclick="sendPostRequestToEndpoint('send', '0x25')">REWIND &#x23EA; </button>
-<button onclick="sendPostRequestToEndpoint('send', '0x27')">FAST FORWARD &#x23E9;</button>
+<button onclick="sendPostRequestToEndpoint('send', 's')"><span name="description"> SKIP</span> &#x1F998; </button>
+<button onclick="sendPostRequestToEndpoint('send', 'm')"><span name="description"> MUTE</span> &#x1F507;</button>
+<button onclick="sendPostRequestToEndpoint('send', 'f')"><span name="description"> FULL SCREEN </span> &#x1F4FA;</button>
+<button onclick="sendPostRequestToEndpoint('send', '0x20')"><span name="description"> PAUSE/UNPAUSE</span> &#x25B6; </button>
+<button onclick="sendPostRequestToEndpoint('send', '0x25')"><span name="description"> REWIND</span> &#x23EA;</button>
+<button onclick="sendPostRequestToEndpoint('send', '0x27')"><span name="description"> FAST FORWARD</span> &#x23E9;</span></button>
 
 <br>
 <p id="output"></p>
